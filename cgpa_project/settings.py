@@ -64,11 +64,18 @@ WSGI_APPLICATION = 'cgpa_project.wsgi.application'
 import os
 import dj_database_url
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default='sqlite:///' + str(BASE_DIR / 'db.sqlite3')
-    )
-}
+db_url = os.environ.get('DATABASE_URL')
+if db_url:
+    DATABASES = {
+        'default': dj_database_url.parse(db_url)
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 AUTH_PASSWORD_VALIDATORS = [
